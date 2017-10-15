@@ -1,7 +1,7 @@
 # coding=utf-8
 
-inputPath = 'D:\\PROJECT\\PYTHON\\TEST\\input\\'
-outputPath = 'D:\\PROJECT\\PYTHON\\TEST\\output\\'
+inputPath = "" #"'D:\\PROJECT\\PYTHON\\TEST\\input\\'
+outputPath = "" # 'D:\\PROJECT\\PYTHON\\TEST\\output\\'
 
 from PIL import Image
 import os
