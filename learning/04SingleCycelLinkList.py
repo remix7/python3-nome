@@ -12,13 +12,15 @@ class Node(object):
 class SingleLinkList(object):
     def __init__(self, node=None):
         self.__head = node
+        if node:
+            node.next = node
 
     def is_empty(self):
         """
         判断链表是否为空
         return: 链表是否为空
         """
-        return self.__head == None
+        return self.__head is None
 
     def length(self):
         """
@@ -27,8 +29,10 @@ class SingleLinkList(object):
         """
         cur = self.__head
         count = 0
-        while cur != None:
+        while cur:
             count += 1
+            if cur.next is self.__head:
+                break
             cur = cur.next
         return count
 
@@ -39,6 +43,8 @@ class SingleLinkList(object):
         cur = self.__head
         while cur:
             print(cur.elem, end=" ")
+            if cur.next is self.__head:
+                break
             cur = cur.next
 
     def add(self, item):
@@ -47,7 +53,15 @@ class SingleLinkList(object):
         param item: 要添加的元素
         """
         node = Node(item)
-        node.next = self.__head
+        cur = self.__head
+        if cur is None:
+            node.next = node
+        else:
+            node.next = cur
+            # 找到最后一个节点
+            while cur.next != self.__head:
+                cur = cur.next
+            cur.next = node
         self.__head = node
 
     def append(self, item):
@@ -56,11 +70,12 @@ class SingleLinkList(object):
         param elem: 要添加的元素
         """
         node = Node(item)
-        if self.is_empty():
-            self.__head = node
+        cur = self.__head
+        if cur is None:
+            self.add(item)
         else:
-            cur = self.__head
-            while cur.next:
+            node.next = self.__head
+            while cur.next != self.__head:
                 cur = cur.next
             cur.next = node
 
@@ -84,21 +99,6 @@ class SingleLinkList(object):
             node = Node(item)
             node.next = pre.next
             pre.next = node
-            # if pos == 0:
-            #     self.add(item)
-            # elif pos > self.length() or self.length() == 0:
-            #     self.append(item)
-            # else:
-            #     node = Node(item)
-            #     pre = self.__head
-            #     count = 0
-            #     while pre != None:
-            #         count += 1
-            #         if count == pos:
-            #             node.next = pre.next
-            #             pre.next = node
-            #             break
-            #         pre = pre.next
 
     def remove(self, item):
         """
@@ -111,26 +111,29 @@ class SingleLinkList(object):
             if cur.elem == item:
                 if pre:
                     pre.next = cur.next
+                    while cur.next != self.__head:
+                        cur = cur.next
+                    cur.next = self.__head
                 else:
+                    # 找到最后一个节点
+                    last = self.__head
+                    while last.next != self.__head:
+                        last = last.next
+                    last.next = cur.next
                     self.__head = cur.next
+                break
+            if cur.next is self.__head:
                 break
             pre = cur
             cur = cur.next
-        # pre = self.__head
-        # if pre.elem == item:
-        #     self.__head = pre.next
-        # else:
-        #     while pre.next:
-        #         if pre.next.elem == item:
-        #             pre.next = pre.next.next
-        #             break
-        #         pre = pre.next
 
     def search(self, item):
         cur = self.__head
         while cur:
             if cur.elem == item:
                 return True
+            if cur.next is self.__head:
+                break
             cur = cur.next
         return False
 
@@ -139,13 +142,15 @@ def main():
     list = SingleLinkList()
     list.add(100)
     list.add(2100)
+    list.append(134)
     list.insert(1, 10000)
-    # list.insert(1, 1000)
-    # list.insert(1, 12130)
-    # list.insert(2, 123)
-    # list.remove(10000)
-    print(list.length())
-    print(list.search(10000))
+    list.insert(1, 1000)
+    list.insert(1, 12130)
+    list.insert(2, 123)
+    list.insert(0, 123)
+    list.remove(134)
+    # print(list.length())
+    print(list.search(100))
     list.travel()
 
 
